@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Brain Tumor Classification</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #d6d3d3;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+        form {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+            border: none;
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            background-color: #ddd;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="file"]:hover {
+            background-color: #eee;
+        }
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: absolute;
+            right: 30px;
+            bottom: 40px;
+            box-shadow: 0px 10px 20px rgba(0,0,0,0.1);
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        h2 {
+            text-align: left;
+            margin-left: 200px;
+            margin-top: -30px;
+            margin-bottom: 15px;
+            font-size: 2rem;
+            font-weight: 300;
+        }
+        p {
+            text-align: left;
+            margin-left: 200px;
+            margin-top: 10px;
+            margin-bottom: 5PX;
+            font-size: 1.1rem;
+        }
+        ul {
+            list-style-type: none;
+            text-align: left;
+            margin-top: -10px;
+            margin-left: 205px;
+            padding: 10px;
+        }
+        li {
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .results-container {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .results-column {
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .results-column img {
+            max-width: 400PX;
+            margin-top: -60px;
+            height: 400PX;
+        }
+        @media screen and (max-width: 768px) {
+            form {
+                width: 80%;
+            }
+            button[type="submit"] {
+                right: 20px;
+                bottom: -20px;
+            }
+            .results-container {
+                flex-direction: column;
+            }
+            .results-column {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <!-- Add navigation menu here -->
+        </nav>
+    </header>
+    <h1>Brain Tumor Classification</h1>
+    <form action="{{ url_for('upload_image') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Upload Image</button>
+    </form>
+    {% if prediction %}
+    <div class="results-container">
+        <div class="results-column">
+            <h2>Prediction Results</h2>
+            <p>Predicted Class: {{ prediction.class }}</p>
+            <p>Confidence: {{ prediction.confidence }}%</p>
+            <p>Class Probabilities:</p>
+            <ul>
+                {% for class_name, prob in prediction.probs.items() %}
+                <li>{{ class_name }}: {{ prob }}%</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="results-column">
+            <img src="{{ url_for('static', filename='uploads/' + prediction.image_name) }}" alt="Uploaded Image">
+        </div>
+    </div>
+    {% endif %}
+    <footer>
+        <!-- Add footer content here -->
+    </footer>
+</body>
+</html>
